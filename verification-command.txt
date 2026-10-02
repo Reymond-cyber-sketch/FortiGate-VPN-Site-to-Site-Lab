@@ -1,0 +1,13 @@
+# Verificar acceso desde USER-PC al WEB-SERVER
+
+ping -c 4 10.24.96.130
+curl -k https://10.24.96.130/
+traceroute 10.24.96.130
+
+# Prueba de Internet
+ping -c 4 8.8.8.8
+ping -c 4 google.com
+
+# Verificar VPN en FGT-USER
+get vpn ipsec tunnel summary
+diagnose vpn tunnel list name VPN-TO-WEB

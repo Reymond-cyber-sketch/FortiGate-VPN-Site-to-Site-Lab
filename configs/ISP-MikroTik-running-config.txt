@@ -1,0 +1,22 @@
+
+[admin@ISP] > /export hide-sensitive
+# 2026-10-02 04:25:04 by RouterOS 7.23.7
+# system id = HmtmLjqz2gC
+#
+/interface ethernet
+set [ find default-name=ether1 ] disable-running-check=no
+set [ find default-name=ether2 ] disable-running-check=no
+set [ find default-name=ether3 ] disable-running-check=no
+set [ find default-name=ether4 ] disable-running-check=no
+set [ find default-name=ether5 ] disable-running-check=no
+set [ find default-name=ether6 ] disable-running-check=no
+/ip address
+add address=198.51.100.97/30 comment="WAN hacia FGT-USER" interface=ether1 network=198.51.100.96
+add address=203.0.113.97/30 comment="WAN hacia FGT-WEB" interface=ether2 network=203.0.113.96
+/ip dhcp-client
+add interface=ether4 name=client2
+/ip firewall nat
+add action=masquerade chain=srcnat out-interface=ether4
+/system identity
+set name=ISP
+[admin@ISP] >

@@ -1,0 +1,139 @@
+FGVMEVZNGE-Q2E01 # show system interface
+config system interface
+    edit "port1"
+        set vdom "root"
+        set ip 203.0.113.98 255.255.255.252
+        set allowaccess ping https
+        set type physical
+        set alias "WAN-ISP"
+        set lldp-reception enable
+        set role wan
+        set snmp-index 1
+    next
+    edit "port2"
+        set vdom "root"
+        set ip 10.24.96.129 255.255.255.240
+        set allowaccess ping
+        set type physical
+        set alias "WEB"
+        set device-identification enable
+        set lldp-transmission enable
+        set role lan
+        set snmp-index 2
+    next
+    edit "port3"
+        set vdom "root"
+        set ip 192.168.178.3 255.255.255.0
+        set allowaccess ping https
+        set type physical
+        set device-identification enable
+        set lldp-transmission enable
+        set role lan
+        set snmp-index 3
+    next
+    edit "naf.root"
+        set vdom "root"
+        set type tunnel
+        set src-check disable
+        set snmp-index 4
+    next
+    edit "l2t.root"
+        set vdom "root"
+        set type tunnel
+        set snmp-index 5
+    next
+    edit "ssl.root"
+        set vdom "root"
+        set type tunnel
+        set alias "SSL VPN interface"
+        set snmp-index 6
+    next
+    edit "fortilink"
+        set vdom "root"
+        set fortilink enable
+        set ip 10.255.1.1 255.255.255.0
+        set allowaccess ping fabric
+        set type aggregate
+        set lldp-reception enable
+        set lldp-transmission enable
+        set snmp-index 7
+    next
+    edit "VPN-TO-USER"
+        set vdom "root"
+        set type tunnel
+        set snmp-index 8
+        set interface "port1"
+    next
+end
+
+
+
+
+FGVMEVZNGE-Q2E01 # show router static
+config router static
+    edit 1
+        set gateway 203.0.113.97
+        set device "port1"
+    next
+    edit 2
+        set dst 10.24.96.0 255.255.255.128
+        set device "VPN-TO-USER"
+    next
+end
+
+
+
+
+config firewall policy
+    edit 1
+        set name "VPN_TO_WEB"
+        set uuid d85345e0-be15-51f1-4b0f-794268a7bd08
+        set srcintf "VPN-TO-USER"
+        set dstintf "port2"
+        set action accept
+        set srcaddr "all"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+    next
+    edit 2
+        set name "WEB_TO_INTERNET"
+        set uuid d806856e-be17-51f1-d06f-295f82304a97
+        set srcintf "port2"
+        set dstintf "port1"
+        set action accept
+        set srcaddr "all"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set nat enable
+    next
+end
+
+
+FGVMEVZNGE-Q2E01 # show vpn ipsec phase1-interface
+config vpn ipsec phase1-interface
+    edit "VPN-TO-USER"
+        set interface "port1"
+        set ike-version 2
+        set peertype any
+        set net-device disable
+        set proposal des-sha256
+        set dhgrp 14
+        set remote-gw 198.51.100.98
+        set psksecret ENC O56JHtGLHXpO3bON4PLermIDTrkG6wiLCN6iCOFNGufHqRpW9h0R9V4rVzQcJLPtxbaIBlNrjeU+rrnE95DbbeqdLieULzpBTGF8fr11WW6bWDmsfTI3fHHtvBwQ2Uz5/fdqadjPuXai7zao9GvpuMNLY6xhvHMeoW9C5t+7Vwk5lcjWwHqDgV2HGVgwqm+0n8phsFlmMjY3dkVA
+    next
+end
+
+FGVMEVZNGE-Q2E01 # show vpn ipsec phase2-interface
+config vpn ipsec phase2-interface
+    edit "VPN-TO-USER-P2"
+        set phase1name "VPN-TO-USER"
+        set proposal des-sha256
+        set pfs disable
+        set auto-negotiate enable
+        set src-subnet 10.24.96.128 255.255.255.240
+        set dst-subnet 10.24.96.0 255.255.255.128
+    next
+end
+
