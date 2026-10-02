@@ -9,7 +9,7 @@ El objetivo principal del laboratorio es establecer una **VPN IPsec Site-to-Site
 ## 🎥 Video demostrativo
 
 📺 **Video de la práctica:**  
-`[PENDIENTE - AGREGAR ENLACE DE YOUTUBE](https://www.youtube.com/watch?v=Xh6HYaw4Sq8)`
+`(https://www.youtube.com/watch?v=Xh6HYaw4Sq8)`
 
 > El video demuestra el funcionamiento de la infraestructura, la VPN activa e inactiva y las pruebas de conectividad.
 
